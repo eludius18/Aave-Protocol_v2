@@ -93,6 +93,7 @@ INFURA_KEY=""
 
 # Optional Etherscan key, for automatize the verification of the contracts at Etherscan
 ETHERSCAN_KEY=""
+ETHERSCAN_NETWORK="kova"
 
 # Optional, if you plan to use Tenderly scripts
 TENDERLY_PROJECT=""
@@ -117,6 +118,9 @@ docker-compose up
 # Open another tab or terminal
 docker-compose exec contracts-env bash
 
+#Install Repositories
+yarn install
+
 # A new Bash terminal is prompted, connected to the container
 npm run test
 ```
@@ -133,6 +137,9 @@ docker-compose up
 
 # Open another tab or terminal
 docker-compose exec contracts-env bash
+
+#Install Repositories
+npm install
 
 # A new Bash terminal is prompted, connected to the container
 npm run aave:kovan:full:migration

@@ -4,8 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import {SafeMath} from '../../dependencies/openzeppelin/contracts/SafeMath.sol';
 import {IERC20} from '../../dependencies/openzeppelin/contracts/IERC20.sol';
-import {IERC721} from '../../dependencies/openzeppelin/contracts/IERC721.sol';
-import {SafeERC721} from '../../dependencies/openzeppelin/contracts/SafeERC721.sol';
+import {SafeERC20} from '../../dependencies/openzeppelin/contracts/SafeERC20.sol';
 import {Address} from '../../dependencies/openzeppelin/contracts/Address.sol';
 import {ILendingPoolAddressesProvider} from '../../interfaces/ILendingPoolAddressesProvider.sol';
 import {IAToken} from '../../interfaces/IAToken.sol';
@@ -48,7 +47,7 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
   using SafeMath for uint256;
   using WadRayMath for uint256;
   using PercentageMath for uint256;
-  using SafeERC721 for IERC721;
+  using SafeERC20 for IERC20;
 
   uint256 public constant LENDINGPOOL_REVISION = 0x2;
 
@@ -117,7 +116,7 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
     reserve.updateState();
     reserve.updateInterestRates(asset, aToken, amount, 0);
 
-    IERC721(asset).safeTransferFrom(msg.sender, aToken, amount);
+    IERC20(asset).safeTransferFrom(msg.sender, aToken, amount);
 
     bool isFirstDeposit = IAToken(aToken).mint(onBehalfOf, amount, reserve.liquidityIndex);
 
@@ -281,7 +280,7 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
       _usersConfig[onBehalfOf].setBorrowing(reserve.id, false);
     }
 
-    IERC721(asset).safeTransferFrom(msg.sender, aToken, paybackAmount);
+    IERC20(asset).safeTransferFrom(msg.sender, aToken, paybackAmount);
 
     IAToken(aToken).handleRepayment(msg.sender, paybackAmount);
 
@@ -522,7 +521,7 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
       if (DataTypes.InterestRateMode(modes[vars.i]) == DataTypes.InterestRateMode.NONE) {
         _reserves[vars.currentAsset].updateState();
         _reserves[vars.currentAsset].cumulateToLiquidityIndex(
-          IERC721(vars.currentATokenAddress).totalSupply(),
+          IERC20(vars.currentATokenAddress).totalSupply(),
           vars.currentPremium
         );
         _reserves[vars.currentAsset].updateInterestRates(
@@ -532,7 +531,7 @@ contract LendingPool is VersionedInitializable, ILendingPool, LendingPoolStorage
           0
         );
 
-        IERC721(vars.currentAsset).safeTransferFrom(
+        IERC20(vars.currentAsset).safeTransferFrom(
           receiverAddress,
           vars.currentATokenAddress,
           vars.currentAmountPlusPremium
