@@ -7,7 +7,7 @@ import './IERC721.sol';
 import './SafeMath.sol';
 import './Address.sol';
 import './Ownable.sol';
-import {ERC721} from './openzeppelin/contracts/token/ERC721/ERC721.sol';
+import {ERC721} from '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 
 contract NFT is ERC721 {
   uint256 public nextTokenId;
